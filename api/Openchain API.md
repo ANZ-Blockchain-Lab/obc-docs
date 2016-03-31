@@ -160,10 +160,12 @@ To learn about the Open Blockchain REST API through Swagger, please take a look 
   * GET /chain/blocks/{Block}
 * [Blockchain](#blockchain)
   * GET /chain
-* [Devops](#devops)
+* [Devops](#devops) [DEPRECATED]
   * POST /devops/deploy
   * POST /devops/invoke
   * POST /devops/query
+* [Chaincode](#chaincode)
+    * POST /chaincode
 * [Network](#network)
   * GET /network/peers
 * [Registrar](#registrar)
@@ -205,11 +207,13 @@ message BlockchainInfo {
 }
 ```
 
-#### Devops
+#### Devops [DEPRECATED]
 
 * **POST /devops/deploy**
 * **POST /devops/invoke**
 * **POST /devops/query**
+
+**[DEPRECATED] The /devops endpoints have been deprecated and are superseded by the /chaincode endpoint. Please use the /chaincode endpoint to deploy, invoke, and query chaincodes. [DEPRECATED]**
 
 Use the Devops APIs to deploy, invoke, and query chaincodes. The required ChaincodeSpec and ChaincodeInvocationSpec payloads are defined in [chaincode.proto](https://github.com/openblockchain/obc-peer/blob/master/protos/chaincode.proto).
 
@@ -328,6 +332,182 @@ The response to a query request depends on the chaincode implementation. It may 
     "OK": "80"
 }
 
+```
+
+#### Chaincode
+
+* **POST /chaincode**
+
+Use the /chaincode endpoint to deploy, invoke, and query a target Chaincode. This service endpoint implements the [JSON RPC 2.0 specification](http://www.jsonrpc.org/specification) with the payload identifying the desired Chaincode operation within the 'method' field.
+
+The /chaincode endpoint implements the the [JSON RPC 2.0 specification](http://www.jsonrpc.org/specification) and as such must have the required fields of `jsonrpc`, `method`, and in our case `params` within the payload. The client should also add the `id` element within the payload if they wish to receive a response to the request. If the `id` element is missing from the request payload, the request is assumed to be a notification and the server will not produce a response.
+
+The following sample payloads may be used to deploy, invoke, and query a chaincode.
+
+Chaincode Deployment Request without security enabled:
+
+```
+POST host:port/chaincode
+
+{
+  "jsonrpc": "2.0",
+  "method": "deploy",
+  "params": {
+    "type": 1,
+    "chaincodeID":{
+        "path":"github.com/openblockchain/obc-peer/openchain/example/chaincode/chaincode_example02"
+    },
+    "ctorMsg": {
+        "function":"init",
+        "args":["a", "1000", "b", "2000"]
+    }
+  },
+  "id": 1
+}
+```
+
+Chaincode Deployment Request with security enabled (add `secureContext` element):
+
+```
+POST host:port/chaincode
+
+{
+  "jsonrpc": "2.0",
+  "method": "deploy",
+  "params": {
+    "type": 1,
+    "chaincodeID":{
+        "path":"github.com/openblockchain/obc-peer/openchain/example/chaincode/chaincode_example02"
+    },
+    "ctorMsg": {
+        "function":"init",
+        "args":["a", "1000", "b", "2000"]
+    },
+    "secureContext": "lukas"
+  },
+  "id": 1
+}
+```
+
+Chaincode Deployment Response:
+
+```
+{
+    "jsonrpc": "2.0",
+    "result": {
+        "status": "OK",
+        "message": "52b0d803fc395b5e34d8d4a7cd69fb6aa00099b8fabed83504ac1c5d61a425aca5b3ad3bf96643ea4fdaac132c417c37b00f88fa800de7ece387d008a76d3586"
+    },
+    "id": 1
+}
+```
+
+Chaincode Invocation Request without security enabled:
+
+```
+{
+  "jsonrpc": "2.0",
+  "method": "invoke",
+  "params": {
+      "type": 1,
+      "chaincodeID":{
+          "name":"52b0d803fc395b5e34d8d4a7cd69fb6aa00099b8fabed83504ac1c5d61a425aca5b3ad3bf96643ea4fdaac132c417c37b00f88fa800de7ece387d008a76d3586"
+      },
+      "ctorMsg": {
+         "function":"invoke",
+         "args":["a", "b", "100"]
+      }
+  },
+  "id": 3
+}
+```
+
+Chaincode Invocation Request with security enabled (add `secureContext` element):
+
+```
+{
+  "jsonrpc": "2.0",
+  "method": "invoke",
+  "params": {
+      "type": 1,
+      "chaincodeID":{
+          "name":"52b0d803fc395b5e34d8d4a7cd69fb6aa00099b8fabed83504ac1c5d61a425aca5b3ad3bf96643ea4fdaac132c417c37b00f88fa800de7ece387d008a76d3586"
+      },
+      "ctorMsg": {
+         "function":"invoke",
+         "args":["a", "b", "100"]
+      },
+      "secureContext": "lukas"
+  },
+  "id": 3
+}
+```
+
+Chaincode Invocation Response:
+
+```
+{
+    "jsonrpc": "2.0",
+    "result": {
+        "status": "OK",
+        "message": "5a4540e5-902b-422d-a6ab-e70ab36a2e6d"
+    },
+    "id": 3
+}
+```
+
+Chaincode Query Request without security enabled:
+
+```
+{
+  "jsonrpc": "2.0",
+  "method": "query",
+  "params": {
+      "type": 1,
+      "chaincodeID":{
+          "name":"52b0d803fc395b5e34d8d4a7cd69fb6aa00099b8fabed83504ac1c5d61a425aca5b3ad3bf96643ea4fdaac132c417c37b00f88fa800de7ece387d008a76d3586"
+      },
+      "ctorMsg": {
+         "function":"query",
+         "args":["a"]
+      }
+  },
+  "id": 5
+}
+```
+
+Chaincode Query Request with security enabled (add `secureContext` element):
+
+```
+{
+  "jsonrpc": "2.0",
+  "method": "query",
+  "params": {
+      "type": 1,
+      "chaincodeID":{
+          "name":"52b0d803fc395b5e34d8d4a7cd69fb6aa00099b8fabed83504ac1c5d61a425aca5b3ad3bf96643ea4fdaac132c417c37b00f88fa800de7ece387d008a76d3586"
+      },
+      "ctorMsg": {
+         "function":"query",
+         "args":["a"]
+      },
+      "secureContext": "lukas"
+  },
+  "id": 5
+}
+```
+
+Chaincode Query Response:
+
+```
+{
+    "jsonrpc": "2.0",
+    "result": {
+        "status": "OK",
+        "message": "-400"
+    },
+    "id": 5
+}
 ```
 
 #### Network
