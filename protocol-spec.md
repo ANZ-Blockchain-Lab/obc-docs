@@ -1040,28 +1040,28 @@ type WritableLedger interface {
 
 `WritableLedger`  interface allows for the caller to update the blockchain.  Note that this is _NOT_ intended for use in normal operation of a consensus plugin.  The current state should be modified by executing transactions using the `Executor` interface, and new blocks will be generated when transactions are committed.  This interface is instead intended primarily for state transfer or corruption recovery.  In particular, functions in this interface should _NEVER_ be exposed directly via consensus messages, as this could result in violating the immutability promises of the blockchain concept.  This interface is comprised of the following functions.
 
-  - 
+  -
   	```
 	PutBlock(blockNumber uint64, block *pb.Block) error
 	```
 
 	This function takes a provided, raw block, and inserts it into the blockchain at the given blockNumber.  Note that this intended to be an unsafe interface, so no error or sanity checking is performed.  Inserting a block with a number higher than the current block height is permitted, similarly overwriting existing already committed blocks is also permitted.  Remember, this does not affect the auditability or immutability of the chain, as the hashing techniques make it computationally infeasible to forge a block earlier in the chain.  Any attempt to rewrite the blockchain history is therefore easily detectable.  This is generally only useful to the state transfer API.
 
-  - 
+  -
   	```
 	ApplyStateDelta(id interface{}, delta *statemgmt.StateDelta) error
 	```
 
 	This function takes a state delta, and applies it to the current state.  The delta will be applied to transition a state forward or backwards depending on the construction of the state delta.  Like the `Executor` methods, `ApplyStateDelta` accepts an opaque interface `id` which should also be passed into `CommitStateDelta` or `RollbackStateDelta` as appropriate.
 
-  - 
+  -
  	```
 	CommitStateDelta(id interface{}) error
 	```
 
 	This function commits the state delta which was applied in `ApplyStateDelta`.  This is intended to be invoked after the caller to `ApplyStateDelta` has verified the state via the state hash obtained via `GetCurrentStateHash()`.  This call takes the same `id` which was passed into `ApplyStateDelta`.
 
-  - 
+  -
   	```
 	RollbackStateDelta(id interface{}) error
 	```
@@ -1069,7 +1069,7 @@ type WritableLedger interface {
 	This function unapplies a state delta which was applied in `ApplyStateDelta`.  This is intended to be invoked after the caller to `ApplyStateDelta` has detected the state hash obtained via `GetCurrentStateHash()` is incorrect.  This call takes the same `id` which was passed into `ApplyStateDelta`.
 
 
-  - 
+  -
   	```
    	EmptyState() error
    	```
@@ -1104,7 +1104,7 @@ The `RemoteLedgers` interface exists primarily to enable state transfer and to i
 
 	This function attempts to retrieve a stream of `*pb.SyncStateSnapshot` from the peer designated by `peerID`.  To apply the result, the existing state should first be emptied via the `WritableLedger` `EmptyState` call, then the contained deltas in the stream should be applied sequentially.
 
-  - 
+  -
   	```
    	GetRemoteStateDeltas(peerID uint64, start, finish uint64) (<-chan *pb.SyncStateDeltas, error)
    	```
@@ -1644,17 +1644,17 @@ following credentials:
 1. Users:
 
    a. claim and grant themselves signing key-pair (spk<sub>u</sub>, ssk<sub>u</sub>),
-   
+
    b. claim and grant themselves encryption key-pair (epk<sub>u</sub>, esk<sub>u</sub>),
-   
+
    c. obtain the encryption (public) key of the chain PK<sub>chain</sub>
-   
+
 2. Validators:
 
    a. claim and grant themselves signing key-pair (spk<sub>v</sub>, ssk<sub>v</sub>),
-   
+
    b. claim and grant themselves an encryption key-pair (epk<sub>v</sub>, esk<sub>v</sub>),
-   
+
    c. obtain the decryption (secret) key of the chain SK<sub>chain</sub>
 
 Thus, enrollment certificates contain the public part of two key-pairs:
@@ -1715,9 +1715,9 @@ One can notice that a deployment transaction consists of several sections:
      that chain-code (invocation, state, etc),
 
   2. K<sub>C</sub> for the user to be able to read only the contract code,
-  
+
   3. K<sub>H</sub> for the user to only be able to read the headers,
-  
+
   4. K<sub>S</sub> for the user to be able to read the state associated to that contract.
 
   Finally users are given the contract's public key PK<sub>c</sub>,
@@ -1864,9 +1864,9 @@ depending on whether the transaction is anonymous (followed and signed by a tran
   Upon successful validation of transaction's format, the validators update their database with that nonce.
 
   **Storage overhead**:
-  
+
   1. on the user side: only the most recently used nonce,
-  
+
   2. on validator side: O(n), where n is the number of users.
 * Users submitting a transaction with a transaction certificate
   should include in the transaction a random nonce, that would guarantee that
@@ -2668,7 +2668,7 @@ POST host:port/chaincode
     },
     "ctorMsg": {
         "function":"init",
-        "args":["a", "100", "b", "200"]
+        "args":["a", "1000", "b", "2000"]
     }
   },
   "id": "1"  
@@ -2680,10 +2680,10 @@ Deploy Response:
 {
     "jsonrpc": "2.0",
     "result": {
-        "OK": "Successfully deployed chainCode.",
-        "message": "3940678a8dff854c5ca4365fe0e29771edccb16b2103578c9d9207fea56b10559b43ff5c3025e68917f5a959f2a121d6b19da573016401d9a028b4211e10b20a"
+        "status": "OK",
+        "message": "52b0d803fc395b5e34d8d4a7cd69fb6aa00099b8fabed83504ac1c5d61a425aca5b3ad3bf96643ea4fdaac132c417c37b00f88fa800de7ece387d008a76d3586"
     },
-    "id": "1"
+    "id": 1
 }
 ```
 
@@ -2703,7 +2703,7 @@ POST host:port/chaincode
     },
     "ctorMsg": {
         "function":"init",
-        "args":["a", "100", "b", "200"]
+        "args":["a", "1000", "b", "2000"]
     },
     "secureContext": "lukas"
   },
@@ -2713,7 +2713,7 @@ POST host:port/chaincode
 
 The invoke request requires the client to supply a `name` parameter, which was previously returned in the response from the deploy transaction. The response to an invocation request is either a message containing a confirmation of successful execution or an error, containing a reason for the failure.
 
-To invoke a function within a chaincode, supply the required ChaincodeInvocationSpec defined in section [3.1.2.4](#3124-invoke-transaction).
+To invoke a function within a chaincode, supply the required ChaincodeSpec payload, defined in section [3.1.2.2](#3122-transaction-specification).
 
 Invoke Request:
 ```
@@ -2723,18 +2723,16 @@ POST host:port/chaincode
   "jsonrpc": "2.0",
   "method": "invoke",
   "params": {
-    "chaincodeSpec": {
-    	"type": "GOLANG",
-      "chaincodeID":{
-        "name":"3940678a8dff854c5ca4365fe0e29771edccb16b2103578c9d9207fea56b10559b43ff5c3025e68917f5a959f2a121d6b19da573016401d9a028b4211e10b20a"
-      },
-    	"ctorMsg": {
-      	"function":"invoke",
-        	"args":["a", "b", "10"]
-    	}
-    }
+  	"type": "GOLANG",
+    "chaincodeID":{
+      "name":"3940678a8dff854c5ca4365fe0e29771edccb16b2103578c9d9207fea56b10559b43ff5c3025e68917f5a959f2a121d6b19da573016401d9a028b4211e10b20a"
+    },
+  	"ctorMsg": {
+    	"function":"invoke",
+      	"args":["a", "b", "100"]
+  	}
   },
-  "id": "1"  
+  "id": "3"  
 }
 ```
 
@@ -2743,9 +2741,10 @@ Invoke Response:
 {
     "jsonrpc": "2.0",
     "result": {
-        "OK": "Successfully invoked chainCode."
+        "status": "OK",
+        "message": "5a4540e5-902b-422d-a6ab-e70ab36a2e6d"
     },
-    "id": "1"
+    "id": 3
 }
 ```
 
@@ -2757,25 +2756,23 @@ Invoke Request with security enabled:
   "jsonrpc": "2.0",
   "method": "invoke",
   "params": {
-    "chaincodeSpec": {
-    	"type": "GOLANG",
-      "chaincodeID":{
-        "name":"3940678a8dff854c5ca4365fe0e29771edccb16b2103578c9d9207fea56b10559b43ff5c3025e68917f5a959f2a121d6b19da573016401d9a028b4211e10b20a"
-      },
-    	"ctorMsg": {
-      	"function":"invoke",
-        	"args":["a", "b", "10"]
-    	},
-    	"secureContext": "lukas"
-    }
+  	"type": "GOLANG",
+    "chaincodeID":{
+      "name":"3940678a8dff854c5ca4365fe0e29771edccb16b2103578c9d9207fea56b10559b43ff5c3025e68917f5a959f2a121d6b19da573016401d9a028b4211e10b20a"
+    },
+  	"ctorMsg": {
+    	"function":"invoke",
+      	"args":["a", "b", "10"]
+  	},
+  	"secureContext": "lukas"
   },
-  "id": "1"  
+  "id": "3"  
 }
 ```
 
 The query request requires the client to supply a `name` parameter, which was previously returned in the response from the deploy transaction. The response to a query request depends on the chaincode implementation. The response will contain a message containing a confirmation of successful execution or an error, containing a reason for the failure. In the case of successful execution, the response will also contain values of requested state variables within the chaincode.
 
-To invoke a query function within a chaincode, supply the required ChaincodeInvocationSpec defined in section [3.1.2.4](#3124-invoke-transaction).
+To invoke a query function within a chaincode, supply the required ChaincodeSpec payload, defined in section [3.1.2.2](#3122-transaction-specification).
 
 Query Request:
 ```
@@ -2785,18 +2782,16 @@ POST host:port/chaincode/
   "jsonrpc": "2.0",
   "method": "query",
   "params": {
-    "chaincodeSpec": {
-    	"type": "GOLANG",
-      "chaincodeID":{
-        "name":"3940678a8dff854c5ca4365fe0e29771edccb16b2103578c9d9207fea56b10559b43ff5c3025e68917f5a959f2a121d6b19da573016401d9a028b4211e10b20a"
-      },
-    	"ctorMsg": {
-      	"function":"query",
-        	"args":["a"]
-    	}
-    }
+  	"type": "GOLANG",
+    "chaincodeID":{
+      "name":"3940678a8dff854c5ca4365fe0e29771edccb16b2103578c9d9207fea56b10559b43ff5c3025e68917f5a959f2a121d6b19da573016401d9a028b4211e10b20a"
+    },
+  	"ctorMsg": {
+    	"function":"query",
+      	"args":["a"]
+  	}
   },
-  "id": "1"  
+  "id": "5"  
 }
 ```
 
@@ -2805,9 +2800,10 @@ Query Response:
 {
     "jsonrpc": "2.0",
     "result": {
-        "OK": "80"
+        "status": "OK",
+        "message": "-400"
     },
-    "id": "1"
+    "id": 5
 }
 ```
 
@@ -2819,19 +2815,17 @@ Query Request with security enabled:
   "jsonrpc": "2.0",
   "method": "query",
   "params": {
-    "chaincodeSpec": {
-    	"type": "GOLANG",
-      "chaincodeID":{
-        "name":"3940678a8dff854c5ca4365fe0e29771edccb16b2103578c9d9207fea56b10559b43ff5c3025e68917f5a959f2a121d6b19da573016401d9a028b4211e10b20a"
-      },
-    	"ctorMsg": {
-      	"function":"query",
-        	"args":["a"]
-    	},
-    	"secureContext": "lukas"
-    }
+  	"type": "GOLANG",
+    "chaincodeID":{
+      "name":"3940678a8dff854c5ca4365fe0e29771edccb16b2103578c9d9207fea56b10559b43ff5c3025e68917f5a959f2a121d6b19da573016401d9a028b4211e10b20a"
+    },
+  	"ctorMsg": {
+    	"function":"query",
+      	"args":["a"]
+  	},
+  	"secureContext": "lukas"
   },
-  "id": "1"  
+  "id": "5"  
 }
 ```
 
