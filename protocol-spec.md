@@ -2725,7 +2725,7 @@ POST host:port/chaincode
   "params": {
   	"type": "GOLANG",
     "chaincodeID":{
-      "name":"3940678a8dff854c5ca4365fe0e29771edccb16b2103578c9d9207fea56b10559b43ff5c3025e68917f5a959f2a121d6b19da573016401d9a028b4211e10b20a"
+      "name":"52b0d803fc395b5e34d8d4a7cd69fb6aa00099b8fabed83504ac1c5d61a425aca5b3ad3bf96643ea4fdaac132c417c37b00f88fa800de7ece387d008a76d3586"
     },
   	"ctorMsg": {
     	"function":"invoke",
@@ -2758,11 +2758,11 @@ Invoke Request with security enabled:
   "params": {
   	"type": "GOLANG",
     "chaincodeID":{
-      "name":"3940678a8dff854c5ca4365fe0e29771edccb16b2103578c9d9207fea56b10559b43ff5c3025e68917f5a959f2a121d6b19da573016401d9a028b4211e10b20a"
+      "name":"52b0d803fc395b5e34d8d4a7cd69fb6aa00099b8fabed83504ac1c5d61a425aca5b3ad3bf96643ea4fdaac132c417c37b00f88fa800de7ece387d008a76d3586"
     },
   	"ctorMsg": {
     	"function":"invoke",
-      	"args":["a", "b", "10"]
+      	"args":["a", "b", "100"]
   	},
   	"secureContext": "lukas"
   },
@@ -2784,7 +2784,7 @@ POST host:port/chaincode/
   "params": {
   	"type": "GOLANG",
     "chaincodeID":{
-      "name":"3940678a8dff854c5ca4365fe0e29771edccb16b2103578c9d9207fea56b10559b43ff5c3025e68917f5a959f2a121d6b19da573016401d9a028b4211e10b20a"
+      "name":"52b0d803fc395b5e34d8d4a7cd69fb6aa00099b8fabed83504ac1c5d61a425aca5b3ad3bf96643ea4fdaac132c417c37b00f88fa800de7ece387d008a76d3586"
     },
   	"ctorMsg": {
     	"function":"query",
@@ -2817,7 +2817,7 @@ Query Request with security enabled:
   "params": {
   	"type": "GOLANG",
     "chaincodeID":{
-      "name":"3940678a8dff854c5ca4365fe0e29771edccb16b2103578c9d9207fea56b10559b43ff5c3025e68917f5a959f2a121d6b19da573016401d9a028b4211e10b20a"
+      "name":"52b0d803fc395b5e34d8d4a7cd69fb6aa00099b8fabed83504ac1c5d61a425aca5b3ad3bf96643ea4fdaac132c417c37b00f88fa800de7ece387d008a76d3586"
     },
   	"ctorMsg": {
     	"function":"query",
