@@ -160,7 +160,7 @@ To learn about the Open Blockchain REST API through Swagger, please take a look 
   * GET /chain/blocks/{Block}
 * [Blockchain](#blockchain)
   * GET /chain
-* [Devops](#devops) [DEPRECATED]
+* [Devops](#devops-deprecated) [DEPRECATED]
   * POST /devops/deploy
   * POST /devops/invoke
   * POST /devops/query
@@ -338,11 +338,11 @@ The response to a query request depends on the chaincode implementation. It may 
 
 * **POST /chaincode**
 
-Use the /chaincode endpoint to deploy, invoke, and query a target Chaincode. This service endpoint implements the [JSON RPC 2.0 specification](http://www.jsonrpc.org/specification) with the payload identifying the desired Chaincode operation within the 'method' field.
+Use the /chaincode endpoint to deploy, invoke, and query a target Chaincode. This endpoint supersedes the /devops endpoints and should be used for all chaincode operations. This service endpoint implements the [JSON RPC 2.0 specification](http://www.jsonrpc.org/specification) with the payload identifying the desired Chaincode operation within the 'method' field. The supported methods are `deploy`, `invoke`, and `query`.
 
-The /chaincode endpoint implements the the [JSON RPC 2.0 specification](http://www.jsonrpc.org/specification) and as such must have the required fields of `jsonrpc`, `method`, and in our case `params` within the payload. The client should also add the `id` element within the payload if they wish to receive a response to the request. If the `id` element is missing from the request payload, the request is assumed to be a notification and the server will not produce a response.
+The /chaincode endpoint implements the the [JSON RPC 2.0 specification](http://www.jsonrpc.org/specification) and as such, must have the required fields of `jsonrpc`, `method`, and in our case `params` supplied within the payload. The client should also add the `id` element within the payload if they wish to receive a response to the request. If the `id` element is missing from the request payload, the request is assumed to be a notification and the server will not produce a response.
 
-The following sample payloads may be used to deploy, invoke, and query a chaincode.
+The following sample payloads may be used to deploy, invoke, and query a sample chaincode. To deploy a chaincode, supply the ChaincodeSpec identifying the chaincode to deploy within the request payload.
 
 Chaincode Deployment Request without security enabled:
 
@@ -365,6 +365,8 @@ POST host:port/chaincode
   "id": 1
 }
 ```
+
+To deploy a chaincode with security enabled, supply the `secureContext` element containing the registrationID of a registered and logged in user together with the payload from above.
 
 Chaincode Deployment Request with security enabled (add `secureContext` element):
 
@@ -389,6 +391,8 @@ POST host:port/chaincode
 }
 ```
 
+The response to a chaincode deployment request will contain a `status` element confirming successful completion of the request. The response will likewise contain the generated chaincode hash which must be used in subsequent invocation and query requests sent to this chaincode.
+
 Chaincode Deployment Response:
 
 ```
@@ -401,6 +405,8 @@ Chaincode Deployment Response:
     "id": 1
 }
 ```
+
+To invoke a chaincode, supply the ChaincodeSpec identifying the chaincode to invoke within the request payload.
 
 Chaincode Invocation Request without security enabled:
 
@@ -421,6 +427,8 @@ Chaincode Invocation Request without security enabled:
   "id": 3
 }
 ```
+
+To invoke a chaincode with security enabled, supply the `secureContext` element containing the registrationID of a registered and logged in user together with the payload from above.
 
 Chaincode Invocation Request with security enabled (add `secureContext` element):
 
@@ -443,6 +451,8 @@ Chaincode Invocation Request with security enabled (add `secureContext` element)
 }
 ```
 
+The response to a chaincode invocation request will contain a `status` element confirming successful completion of the request. The response will likewise contain the transaction id number for that specific transaction. The client may use the returned transaction id number to check on the status of the transaction after the transaction has been submitted to the system.
+
 Chaincode Invocation Response:
 
 ```
@@ -455,6 +465,8 @@ Chaincode Invocation Response:
     "id": 3
 }
 ```
+
+To query a chaincode, supply the ChaincodeSpec identifying the chaincode to query within the request payload.
 
 Chaincode Query Request without security enabled:
 
@@ -476,6 +488,8 @@ Chaincode Query Request without security enabled:
 }
 ```
 
+To query a chaincode with security enabled, supply the `secureContext` element containing the registrationID of a registered and logged in user together with the payload from above.
+
 Chaincode Query Request with security enabled (add `secureContext` element):
 
 ```
@@ -496,6 +510,8 @@ Chaincode Query Request with security enabled (add `secureContext` element):
   "id": 5
 }
 ```
+
+The response to a chaincode query request will contain a `status` element confirming successful completion of the request. The response will likewise contain an appropriate `message`, as defined by the chaincode. The `message` received depends on the chaincode implementation and may be a string or number indicating the value of a specific chaincode variable.
 
 Chaincode Query Response:
 
