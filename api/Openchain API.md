@@ -338,7 +338,7 @@ The response to a query request depends on the chaincode implementation. It may 
 
 * **POST /chaincode**
 
-Use the /chaincode endpoint to deploy, invoke, and query a target Chaincode. This endpoint supersedes the /devops endpoints and should be used for all chaincode operations. This service endpoint implements the [JSON RPC 2.0 specification](http://www.jsonrpc.org/specification) with the payload identifying the desired Chaincode operation within the 'method' field. The supported methods are `deploy`, `invoke`, and `query`.
+Use the /chaincode endpoint to deploy, invoke, and query a target Chaincode. This endpoint supersedes the [/devops](#devops-deprecated) endpoints and should be used for all chaincode operations. This service endpoint implements the [JSON RPC 2.0 specification](http://www.jsonrpc.org/specification) with the payload identifying the desired Chaincode operation within the `method` field. The supported methods are `deploy`, `invoke`, and `query`.
 
 The /chaincode endpoint implements the the [JSON RPC 2.0 specification](http://www.jsonrpc.org/specification) and as such, must have the required fields of `jsonrpc`, `method`, and in our case `params` supplied within the payload. The client should also add the `id` element within the payload if they wish to receive a response to the request. If the `id` element is missing from the request payload, the request is assumed to be a notification and the server will not produce a response.
 
