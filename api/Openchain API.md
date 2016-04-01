@@ -213,7 +213,7 @@ message BlockchainInfo {
 * **POST /devops/invoke**
 * **POST /devops/query**
 
-**[DEPRECATED] The /devops endpoints have been deprecated and are superseded by the /chaincode endpoint. Please use the /chaincode endpoint to deploy, invoke, and query chaincodes. [DEPRECATED]**
+**[DEPRECATED] The /devops endpoints have been deprecated and are superseded by the [/chaincode](#chaincode) endpoint. Please use the [/chaincode](#chaincode) endpoint to deploy, invoke, and query chaincodes. [DEPRECATED]**
 
 Use the Devops APIs to deploy, invoke, and query chaincodes. The required ChaincodeSpec and ChaincodeInvocationSpec payloads are defined in [chaincode.proto](https://github.com/openblockchain/obc-peer/blob/master/protos/chaincode.proto).
 
