@@ -168,7 +168,7 @@ POST host:port/chaincode
     },
     "ctorMsg": {
         "function":"init",
-        "args":["a", "1000", "b", "2000"]
+        "args":["a", "100", "b", "200"]
     },
     "secureContext": "jim"
   },
