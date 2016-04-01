@@ -119,25 +119,34 @@ Alternatively, you can run the chaincode deploy transaction through the REST API
 
 <b>REST Request:</b>
 ```
-POST localhost:3000/devops/deploy
+POST host:port/chaincode
 
 {
-  "type": "GOLANG",
-  "chaincodeID":{
-      "name":"mycc"
+  "jsonrpc": "2.0",
+  "method": "deploy",
+  "params": {
+    "type": 1,
+    "chaincodeID":{
+        "path":"github.com/openblockchain/obc-peer/openchain/example/chaincode/chaincode_example02"
+    },
+    "ctorMsg": {
+        "function":"init",
+        "args":["a", "100", "b", "200"]
+    }
   },
-  "ctorMsg": {
-      "function":"init",
-      "args":["a", "100", "b", "200"]
-  }
+  "id": 1
 }
 ```
 
 <b>REST Response:</b>
 ```
-200 OK
 {
-    “Status”: “OK. Successfully deployed chainCode.”
+    "jsonrpc": "2.0",
+    "result": {
+        "status": "OK",
+        "message": "52b0d803fc395b5e34d8d4a7cd69fb6aa00099b8fabed83504ac1c5d61a425aca5b3ad3bf96643ea4fdaac132c417c37b00f88fa800de7ece387d008a76d3586"
+    },
+    "id": 1
 }
 ```
 
@@ -147,18 +156,23 @@ POST localhost:3000/devops/deploy
 
 <b>REST Request:</b>
 ```
-POST localhost:3000/devops/deploy
+POST host:port/chaincode
 
 {
-  "type": "GOLANG",
-  "chaincodeID":{
-      "name":"mycc"
+  "jsonrpc": "2.0",
+  "method": "deploy",
+  "params": {
+    "type": 1,
+    "chaincodeID":{
+        "path":"github.com/openblockchain/obc-peer/openchain/example/chaincode/chaincode_example02"
+    },
+    "ctorMsg": {
+        "function":"init",
+        "args":["a", "100", "b", "200"]
+    },
+    "secureContext": "jim"
   },
-  "ctorMsg": {
-      "function":"init",
-      "args":["a", "100", "b", "200"]
-  },
-  "secureContext": "jim"
+  "id": 1
 }
 ```
 
@@ -177,27 +191,34 @@ Alternatively, run the chaincode invoking transaction through the REST API. Note
 
 <b>REST Request:</b>
 ```
-POST localhost:3000/devops/invoke
+POST host:port/chaincode
 
 {
-  "chaincodeSpec":{
-      "type": "GOLANG",
+  "jsonrpc": "2.0",
+  "method": "invoke",
+  "params": {
+      "type": 1,
       "chaincodeID":{
-          "name":"mycc"
+          "name":"52b0d803fc395b5e34d8d4a7cd69fb6aa00099b8fabed83504ac1c5d61a425aca5b3ad3bf96643ea4fdaac132c417c37b00f88fa800de7ece387d008a76d3586"
       },
-      "ctorMsg":{
-          "function":"invoke",
-          "args":["a", "b", "10"]
+      "ctorMsg": {
+         "function":"invoke",
+         "args":["a", "b", "10"]
       }
-  }
+  },
+  "id": 3
 }
 ```
 
 <b>REST Response:</b>
 ```
-200 OK
 {
-    “Status”: “OK. Successfully invoked transaction.”
+    "jsonrpc": "2.0",
+    "result": {
+        "status": "OK",
+        "message": "5a4540e5-902b-422d-a6ab-e70ab36a2e6d"
+    },
+    "id": 3
 }
 ```
 
@@ -207,20 +228,23 @@ POST localhost:3000/devops/invoke
 
 <b> REST Request:</b>
 ```
-POST localhost:3000/devops/invoke
+POST host:port/chaincode
 
 {
-  "chaincodeSpec":{
-      "type": "GOLANG",
+  "jsonrpc": "2.0",
+  "method": "invoke",
+  "params": {
+      "type": 1,
       "chaincodeID":{
-          "name":"mycc"
+          "name":"52b0d803fc395b5e34d8d4a7cd69fb6aa00099b8fabed83504ac1c5d61a425aca5b3ad3bf96643ea4fdaac132c417c37b00f88fa800de7ece387d008a76d3586"
       },
-      "ctorMsg":{
-          "function":"invoke",
-          "args":["a", "b", "10"]
+      "ctorMsg": {
+         "function":"invoke",
+         "args":["a", "b", "10"]
       },
-  	  "secureContext": "jim"
-  }
+      "secureContext": "jim"
+  },
+  "id": 3
 }
 ```
 
@@ -247,30 +271,34 @@ Alternatively, run the chaincode query transaction through the REST API. Note, t
 
 <b> REST Request:</b>
 ```
-POST localhost:3000/devops/query
+POST host:port/chaincode
 
 {
-  "chaincodeSpec":{
-      "type": "GOLANG",
+  "jsonrpc": "2.0",
+  "method": "query",
+  "params": {
+      "type": 1,
       "chaincodeID":{
-          "name":"mycc"
+          "name":"52b0d803fc395b5e34d8d4a7cd69fb6aa00099b8fabed83504ac1c5d61a425aca5b3ad3bf96643ea4fdaac132c417c37b00f88fa800de7ece387d008a76d3586"
       },
-      "ctorMsg":{
-          "function":"query",
-          "args":["a"]
+      "ctorMsg": {
+         "function":"query",
+         "args":["a"]
       }
-  }
+  },
+  "id": 5
 }
 ```
 
 <b>REST Response:</b>
 ```
-200 OK
 {
-    "OK": {
-        "Name": "a",
-        "Amount": "70"
-    }
+    "jsonrpc": "2.0",
+    "result": {
+        "status": "OK",
+        "message": "70"
+    },
+    "id": 5
 }
 ```
 
@@ -280,20 +308,23 @@ POST localhost:3000/devops/query
 
 <b>REST Request:</b>
 ```
-POST localhost:3000/devops/query
+POST host:port/chaincode
 
 {
-  "chaincodeSpec":{
-      "type": "GOLANG",
+  "jsonrpc": "2.0",
+  "method": "query",
+  "params": {
+      "type": 1,
       "chaincodeID":{
-          "name":"mycc"
+          "name":"52b0d803fc395b5e34d8d4a7cd69fb6aa00099b8fabed83504ac1c5d61a425aca5b3ad3bf96643ea4fdaac132c417c37b00f88fa800de7ece387d008a76d3586"
       },
-      "ctorMsg":{
-          "function":"query",
-          "args":["a"]
+      "ctorMsg": {
+         "function":"query",
+         "args":["a"]
       },
-  	  "secureContext": "jim"
-  }
+      "secureContext": "jim"
+  },
+  "id": 5
 }
 ```
 
