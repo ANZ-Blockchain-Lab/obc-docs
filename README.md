@@ -1,3 +1,5 @@
+## Notice: This repository has been moved to the [Linux Foundation's Hyperledger](https://github.com/hyperledger/fabric) project. The contents found here now reside within the Hyperledger project [docs](https://github.com/hyperledger/fabric/tree/master/docs) directory. All future documentation pull requests and documentation related issues must be created in the [Linux Foundation's Hyperledger](https://github.com/hyperledger/fabric) project and will not be accepted here.
+
 ## Notice regarding the Linux Foundation's Hyperledger project
 
 The IBM Open Blockchain (OBC) project is our contribution to the Linux Foundation [Hyperledger](https://www.hyperledger.org/) project. We have made it available as open source to enable others to explore our architecture and design. IBM intends to engage rigorously in the Linux Foundation [Hyperledger](https://www.hyperledger.org/) project as the community establishes itself and decides on a code base. Once established, we will transition our development focus to the [Hyperledger](https://www.hyperledger.org/) effort, at which point the code will be maintained for use by IBM.
